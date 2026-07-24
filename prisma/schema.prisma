@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum ClaimStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  NEEDS_INFO
+  APPROVED
+  DENIED
+}
+
+enum IncidentType {
+  COLLISION
+  THEFT
+  GLASS
+  WEATHER
+  VANDALISM
+  OTHER
+}
+
+model Policy {
+  id           String   @id @default(cuid())
+  policyNumber String   @unique
+  plate        String   @unique
+  vin          String
+  make         String
+  model        String
+  year         Int
+  holderName   String
+  holderEmail  String
+  createdAt    DateTime @default(now())
+  claims       Claim[]
+}
+
+model Claim {
+  id              String          @id @default(cuid())
+  claimNumber     String          @unique
+  status          ClaimStatus     @default(SUBMITTED)
+  incidentType    IncidentType
+  incidentDate    DateTime
+  location        String
+  description     String
+  injuries        Boolean         @default(false)
+  policeReport    Boolean         @default(false)
+  contactName     String
+  contactEmail    String
+  contactPhone    String
+  plateEntered    String
+  policyId        String?
+  policy          Policy?         @relation(fields: [policyId], references: [id])
+  policyVerified  Boolean         @default(false)
+  adjusterNote    String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  attachments     Attachment[]
+  statusHistory   StatusHistory[]
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  claimId    String
+  claim      Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  filename   String
+  mimeType   String
+  path       String
+  uploadedAt DateTime @default(now())
+}
+
+model StatusHistory {
+  id         String       @id @default(cuid())
+  claimId    String
+  claim      Claim        @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  fromStatus ClaimStatus?
+  toStatus   ClaimStatus
+  note       String?
+  createdAt  DateTime     @default(now())
+}
