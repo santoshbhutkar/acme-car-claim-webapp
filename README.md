@@ -72,6 +72,19 @@ Claimant pages never show adjuster controls. Adjuster desk is its own chrome (`A
 - `src/lib/claims/` — status rules, claim numbers, uploads, Zod schemas
 - `prisma/` — schema + seed
 
+## SonarQube scan
+
+CI analysis runs on every push to `main` and on pull requests via [.github/workflows/sonarqube.yml](.github/workflows/sonarqube.yml).
+
+Required GitHub Actions secrets (already configured on this repo):
+
+- `SONAR_HOST_URL` — SonarQube / SonarCloud server URL
+- `SONAR_TOKEN` — analysis token with permission to create/analyze project `acme-car-claim-webapp`
+
+Project settings live in [sonar-project.properties](sonar-project.properties) (`sonar.sources=src`).
+
+Trigger manually: **Actions → SonarQube Scan → Run workflow**.
+
 ## Out of scope (V1)
 
 Microservices, real auth/SSO, payments, email/SMS, PDF, ML/OCR, production cloud deploy.

@@ -10,7 +10,8 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset --force",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "sonar": "echo \"Run analysis via GitHub Actions (SonarQube Scan workflow) or: sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.token=$SONAR_TOKEN\""
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
